@@ -13,6 +13,7 @@ def analyze(request):
     removepunc = request.GET.get('removepunc', 'off')
     fullcaps = request.GET.get('fullcaps', 'off')
     newlineremover = request.GET.get('newlineremover', 'off')
+    charcounter = request.GET.get('charcounter', 'off')
 
     if removepunc == 'on':
         punctuations = string.punctuation
@@ -39,6 +40,18 @@ def analyze(request):
                 analyzed = analyzed + char
 
         params = {'purpose': 'Remove New Lines', 'analyzed_text': analyzed}
+        return render(request, 'analyze.html', params)
+
+    elif charcounter == 'on':
+        count = 0
+        analyzed = ""
+        for index, char in enumerate(djtext):
+            if not (djtext[index] == ' '):
+                count = count + 1
+
+        analyzed = f'Total number of Characters:{count}'
+
+        params = {'purpose': 'Character Counter', 'analyzed_text': analyzed}
         return render(request, 'analyze.html', params)
 
     else:
