@@ -8,8 +8,12 @@
 <h1>Enter Text Below:</h1>
 <form action='/analyze' method='get'>
     <textarea name='text' placeholder="Enter Text Here" style="width: 507px; height: 156px;"></textarea><br>
+
     <input type='checkbox' name='removepunc'> Remove Punctuations<br>
     <input type='checkbox' name='fullcaps'> UPPERCASE<br>
+    <input type='checkbox' name='newlineremover'> New Line Remover<br>
+    <input type='checkbox' name='extraspaceremover'> Extra Space Remover<br>
+
     <button type='submit'>Analyze</button>
 </form>
 </body>

@@ -20,7 +20,7 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='Home'),
+    path('', views.home, name='home'),
     path('analyze', views.analyze, name='analyze'),
 
     # path('capfirst', views.capfirst, name='capfirst'),
