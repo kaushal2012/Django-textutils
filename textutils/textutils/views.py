@@ -1,5 +1,5 @@
 import string
-from django.http import HttpResponse
+# from django.http import HttpResponse
 from django.shortcuts import render
 
 
@@ -8,51 +8,32 @@ def home(request):
 
 
 def analyze(request):
-    djtext = request.GET.get('text', 'default')
+    input_text = request.POST.get('text', 'default')
 
-    removepunc = request.GET.get('removepunc', 'off')
-    fullcaps = request.GET.get('fullcaps', 'off')
-    newlineremover = request.GET.get('newlineremover', 'off')
-    charcounter = request.GET.get('charcounter', 'off')
+    remove_punctuation = request.POST.get('removepunc', 'off')
+    upper_case = request.POST.get('fullcaps', 'off')
+    newline_remover = request.POST.get('newlineremover', 'off')
+    character_counter = request.POST.get('charcounter', 'off')
 
-    if removepunc == 'on':
+    analyzed = input_text
+    purposes = []
+
+    if remove_punctuation == 'on':
         punctuations = string.punctuation
-        analyzed = ""
-        for char in djtext:
-            if char not in punctuations:
-                analyzed = analyzed + char
+        analyzed = ''.join([char for char in analyzed if char not in punctuations])
+        purposes.append('Removed Punctuations')
 
-        params = {'purpose': 'Remove punctuations', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', params)
+    if upper_case == 'on':
+        analyzed = analyzed.upper()
+        purposes.append('Changed to Uppercase')
 
-    elif fullcaps == 'on':
-        analyzed = ""
-        for char in djtext:
-            analyzed = analyzed + char.upper()
+    if newline_remover == 'on':
+        analyzed = ''.join([char for char in analyzed if char != '\n' and char != '\r'])
+        purposes.append('Removed New Lines')
 
-        params = {'purpose': 'Change to Uppercase', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', params)
+    if character_counter == 'on':
+        count = len(analyzed)
+        purposes.append(f'Character Counter: {count}')
 
-    elif newlineremover == 'on':
-        analyzed = ""
-        for char in djtext:
-            if char != '\n':
-                analyzed = analyzed + char
-
-        params = {'purpose': 'Remove New Lines', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', params)
-
-    elif charcounter == 'on':
-        count = 0
-        analyzed = ""
-        for index, char in enumerate(djtext):
-            if not (djtext[index] == ' '):
-                count = count + 1
-
-        analyzed = f'Total number of Characters:{count}'
-
-        params = {'purpose': 'Character Counter', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', params)
-
-    else:
-        return HttpResponse('Error')
+    params = {'purposes': purposes, 'analyzed_text': analyzed}
+    return render(request, 'analyze.html', params)
